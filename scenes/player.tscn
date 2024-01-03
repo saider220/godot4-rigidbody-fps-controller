@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://bjeihbon5n4yw"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_2bg5q"]
+[ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="2_gm8nr"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2ohj1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qo3s3"]
+height = 1.1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fve87"]
+
+[node name="Player" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 2
+collision_mask = 5
+lock_rotation = true
+script = ExtResource("1_2bg5q")
+
+[node name="standingCollisionShape" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_2ohj1")
+
+[node name="crouchingCollisionShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.451314, 0)
+shape = SubResource("CapsuleShape3D_qo3s3")
+disabled = true
+
+[node name="Smoothing" type="Node3D" parent="."]
+script = ExtResource("2_gm8nr")
+
+[node name="head" type="Node3D" parent="Smoothing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Pitch" type="Node3D" parent="Smoothing/head"]
+
+[node name="Camera3D" type="Camera3D" parent="Smoothing/head/Pitch"]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Smoothing"]
+mesh = SubResource("CapsuleMesh_fve87")
+
+[node name="GroundRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0215133, 0)
+collision_mask = 5
+
+[node name="CanStandRayCast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.000779271, 0)
+target_position = Vector3(0, 1, 0)
+
+[connection signal="body_shape_entered" from="." to="." method="_on_body_shape_entered"]

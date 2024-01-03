@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://841qomhpv6ca"]
+
+[ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="1_hse08"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4vu0v"]
+rough = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ni62j"]
+
+[node name="Box" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 7
+physics_material_override = SubResource("PhysicsMaterial_4vu0v")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ni62j")
+
+[node name="Smoothing" type="Node3D" parent="."]
+script = ExtResource("1_hse08")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Smoothing"]

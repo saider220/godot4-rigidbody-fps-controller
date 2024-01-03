@@ -1,0 +1,72 @@
+[gd_scene load_steps=13 format=3 uid="uid://djw3nhqdbx4od"]
+
+[ext_resource type="Texture2D" uid="uid://ct5ukkql2ciyn" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_rmu7r"]
+[ext_resource type="Texture2D" uid="uid://dn2tsea6drd13" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_xigpt"]
+[ext_resource type="PackedScene" uid="uid://bjeihbon5n4yw" path="res://scenes/player.tscn" id="3_4i7kv"]
+[ext_resource type="PackedScene" uid="uid://841qomhpv6ca" path="res://scenes/box.tscn" id="3_q8lmd"]
+[ext_resource type="PackedScene" uid="uid://dc4q0ms6xitbo" path="res://scenes/rail.tscn" id="5_7asvd"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2a8je"]
+friction = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2hqwr"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kgos0"]
+albedo_texture = ExtResource("1_rmu7r")
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_udkns"]
+material = SubResource("StandardMaterial3D_kgos0")
+size = Vector3(50, 1, 50)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_p5yd3"]
+panorama = ExtResource("2_xigpt")
+
+[sub_resource type="Sky" id="Sky_80gjq"]
+sky_material = SubResource("PanoramaSkyMaterial_p5yd3")
+
+[sub_resource type="Environment" id="Environment_p31nh"]
+background_mode = 2
+sky = SubResource("Sky_80gjq")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="world" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("3_4i7kv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10953, 8, 0.0192814)
+
+[node name="stage" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="stage"]
+collision_mask = 7
+physics_material_override = SubResource("PhysicsMaterial_2a8je")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="stage/StaticBody3D"]
+shape = SubResource("BoxShape3D_2hqwr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="stage/StaticBody3D"]
+mesh = SubResource("BoxMesh_udkns")
+skeleton = NodePath("../..")
+
+[node name="Box" parent="stage" instance=ExtResource("3_q8lmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98806, 1.0423, -9.68203)
+
+[node name="Box2" parent="stage" instance=ExtResource("3_q8lmd")]
+transform = Transform3D(0.521933, 0, 0.852987, 0, 1, 0, -0.852987, 0, 0.521933, 1.90288, 1.02966, -11.2211)
+
+[node name="Box3" parent="stage" instance=ExtResource("3_q8lmd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.49234, 1.02966, -9.22117)
+
+[node name="env" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="env"]
+environment = SubResource("Environment_p31nh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Rail" parent="." instance=ExtResource("5_7asvd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, -3)
